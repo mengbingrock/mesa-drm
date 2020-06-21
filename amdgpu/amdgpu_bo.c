@@ -649,6 +649,7 @@ drm_public int amdgpu_bo_list_create(amdgpu_device_handle dev,
 	union drm_amdgpu_bo_list args;
 	unsigned i;
 	int r;
+	printf("amdgpu_bo_list_create: number_of_resources is %lu\n",number_of_resources);
 
 	if (!number_of_resources)
 		return -EINVAL;

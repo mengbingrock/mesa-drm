@@ -653,7 +653,7 @@ static void amdgpu_command_submission_gfx_separate_ibs(void)
 	r = amdgpu_cs_ctx_create(device_handle, &context_handle);
 	CU_ASSERT_EQUAL(r, 0);
 
-	r = amdgpu_bo_alloc_and_map(device_handle, 4096, 4096,
+	r = amdgpu_bo_alloc_and_mapde(vice_handle, 4096, 4096,
 				    AMDGPU_GEM_DOMAIN_GTT, 0,
 				    &ib_result_handle, &ib_result_cpu,
 				    &ib_result_mc_address, &va_handle);
@@ -1346,7 +1346,7 @@ static void amdgpu_command_submission_write_linear_helper(unsigned ip_type)
 	resources = calloc(1, sizeof(amdgpu_bo_handle));
 	CU_ASSERT_NOT_EQUAL(resources, NULL);
 
-	for (ring_id = 0; (1 << ring_id) & hw_ip_info.available_rings; ring_id++) {
+	for (ring_id = 0; (1 << ring_id) & hw_ip_info.available_rings; ring_id++) {  //hw_ip_info.available_rings is of Bitmask form
 		loop = 0;
 		while(loop < 2) {
 			/* allocate UC bo for sDMA use */
@@ -1381,6 +1381,14 @@ static void amdgpu_command_submission_write_linear_helper(unsigned ip_type)
 					pm4[i++] = 0xdeadbeaf;
 			} else if ((ip_type == AMDGPU_HW_IP_GFX) ||
 				    (ip_type == AMDGPU_HW_IP_COMPUTE)) {
+				if(ip_type == AMDGPU_HW_IP_GFX){
+					pirntf("ip type is AMDGPU_HW_IP_GFX\n");
+				}
+				else
+				{
+					pirntf("ip type is AMDGPU_HW_IP_COMPUTE\n");
+				}
+
 				pm4[i++] = PACKET3(PACKET3_WRITE_DATA, 2 + sdma_write_length);
 				pm4[i++] = WRITE_DATA_DST_SEL(5) | WR_CONFIRM;
 				pm4[i++] = 0xfffffffc & bo_mc;
